@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartoon Hangman - Patience</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff4d4d;
+      text-shadow: 2px 2px #fff;
+    }
+    #wordDisplay {
+      font-size: 2rem;
+      letter-spacing: 10px;
+      margin: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+    #letters button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 10px;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    #letters button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    #letters button:hover:not(:disabled) {
+      background: #45a049;
+      transform: scale(1.1);
+    }
+    canvas {
+      background: #fff;
+      border: 3px solid #333;
+      margin: 20px auto;
+      display: block;
+      border-radius: 12px;
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+    }
+    #message {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      color: #333;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 Cartoon Hangman 🎨</h1>
+  <canvas id="hangmanCanvas" width="200" height="250"></canvas>
+  <div id="wordDisplay"></div>
+  <div id="letters"></div>
+  <div id="message"></div>
+
+  <script>
+    const word = "patience";
+    let guessedWord = Array(word.length).fill("_");
+    let wrongGuesses = 0;
+    const maxWrong = 6;
+
+    const wordDisplay = document.getElementById("wordDisplay");
+    const lettersDiv = document.getElementById("letters");
+    const message = document.getElementById("message");
+    const canvas = document.getElementById("hangmanCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function drawHangman(step) {
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#000";
+      
+      switch(step) {
+        case 1: // Head
+          ctx.beginPath();
+          ctx.arc(100, 50, 20, 0, Math.PI*2);
+          ctx.stroke();
+          break;
+        case 2: // Body
+          ctx.beginPath();
+          ctx.moveTo(100, 70);
+          ctx.lineTo(100, 130);
+          ctx.stroke();
+          break;
+        case 3: // Left arm
+          ctx.beginPath();
+          ctx.moveTo(100, 80);
+          ctx.lineTo(70, 110);
+          ctx.stroke();
+          break;
+        case 4: // Right arm
+          ctx.beginPath();
+          ctx.moveTo(100, 80);
+          ctx.lineTo(130, 110);
+          ctx.stroke();
+          break;
+        case 5: // Left leg
+          ctx.beginPath();
+          ctx.moveTo(100, 130);
+          ctx.lineTo(80, 170);
+          ctx.stroke();
+          break;
+        case 6: // Right leg
+          ctx.beginPath();
+          ctx.moveTo(100, 130);
+          ctx.lineTo(120, 170);
+          ctx.stroke();
+          break;
+      }
+    }
+
+    function updateDisplay() {
+      wordDisplay.textContent = guessedWord.join(" ");
+    }
+
+    function createLetterButtons() {
+      const alphabet = "abcdefghijklmnopqrstuvwxyz";
+      for (let letter of alphabet) {
+        let btn = document.createElement("button");
+        btn.textContent = letter;
+        btn.addEventListener("click", () => handleGuess(letter, btn));
+        lettersDiv.appendChild(btn);
+      }
+    }
+
+    function handleGuess(letter, btn) {
+      btn.disabled = true;
+      if (word.includes(letter)) {
+        for (let i = 0; i < word.length; i++) {
+          if (word[i] === letter) guessedWord[i] = letter;
+        }
+      } else {
+        wrongGuesses++;
+        drawHangman(wrongGuesses);
+      }
+      updateDisplay();
+      checkGameOver();
+    }
+
+    function checkGameOver() {
+      if (!guessedWord.includes("_")) {
+        message.textContent = "🎉 You Win! The word is PATIENCE.";
+        disableAll();
+      } else if (wrongGuesses >= maxWrong) {
+        message.textContent = "💀 Game Over! The word was PATIENCE.";
+        disableAll();
+      }
+    }
+
+    function disableAll() {
+      document.querySelectorAll("#letters button").forEach(b => b.disabled = true);
+    }
+
+    // Initialize
+    updateDisplay();
+    createLetterButtons();
+  </script>
+</body>
+</html>
