@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cartoon Hangman - Patience</title>
+  <title>Hangman - Patience</title>
   <style>
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -58,7 +58,7 @@
   </style>
 </head>
 <body>
-  <h1>🎨 Cartoon Hangman 🎨</h1>
+  <h1>🎨 Hangman 🎨</h1>
   <canvas id="hangmanCanvas" width="200" height="250"></canvas>
   <div id="wordDisplay"></div>
   <div id="letters"></div>
@@ -152,7 +152,7 @@
         message.textContent = "🎉 You Win! The word is PATIENCE.";
         disableAll();
       } else if (wrongGuesses >= maxWrong) {
-        message.textContent = "💀 Game Over! The word was PATIENCE.";
+        message.textContent = "💀 Game Over! reopen the link and try again.";
         disableAll();
       }
     }
